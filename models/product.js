@@ -9,7 +9,8 @@ const productSchema = new mongoose.Schema({
     name : {
         type : String,
         required : true,
-        trim : true
+        trim : true,
+        unique : true
     },
     image : {
         type : Buffer        
@@ -21,6 +22,19 @@ const productSchema = new mongoose.Schema({
 },{
     timestamps : true
 })
+
+productSchema.statics.preventDublicate = async function(obj) {
+    const query = await Product.findOne({name : obj.name})
+
+    if (!query) {
+        const product = new Product(obj)
+        await product.save()
+        return product;
+    }else{
+        throw new Error("This email has been used already");
+    }
+
+}
 
 const Product = mongoose.model("Product",productSchema)
 

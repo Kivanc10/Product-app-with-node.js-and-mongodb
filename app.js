@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path")
 require("./db/mongodb"); // to connect to db
+const Product = require("./models/product")
+
 
 const app = express()
 //console.log(path.join(__dirname,"./public"))
@@ -16,6 +18,15 @@ app.get("/",(req,res) => {
     res.render("index",{
 
     })
+})
+
+app.post("/product",async (req,res) => {
+    try {
+        const product = await Product.preventDublicate(req.body);
+        res.status(201).send({product})
+    } catch (error) {
+        res.status(400).send(error)
+    }
 })
 
 
