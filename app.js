@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const path = require("path")
 require("./db/mongodb"); // to connect to db
 const Product = require("./models/product")
@@ -21,6 +22,19 @@ app.get("/",(req,res) => {
     })
 })
 
+const upload = multer({
+    dest = "avatars",
+    limits : {
+        fileSize : 1000000
+    },
+    fileFilter(req,file,cb) {
+        if(!file.originalname.endsWith(".jpg") || !file.originalname.endsWith(".jpeg") || !file.originalname.endsWith(".png")) {
+            cb(new Error("The extension of the file must be .jpg or .jpeg or .png"),false)
+        }
+        cb(undefined,true);
+    }
+})
+
 app.post("/product",async (req,res) => {
     try {
         const product = await Product.preventDublicate(req.body);
@@ -30,11 +44,23 @@ app.post("/product",async (req,res) => {
     }
 })
 
+app.post("/products/avatar:/id",upload.single("image"),async (req,res) => {
+    const _id = req.params.id
+    const product = await Product.findById(_id)
+    if (!product) {
+        throw new Error("there is no product to choose avatar")
+    }
+//    product.image = 
+    res.status(200).send("succeed");
+},(err,req,res,next) => {
+    res.status(404).send({error : err.message})
+})
+
 app.get("/products",async (req,res) => {
     try {
         const products = await Product.find({})
         if (!products) {
-            return res.status(404).send("There is no products to show")
+            return res.status(404).send("There is no product to show")
         }
         res.status(200).send(products)
     } catch (error) {
