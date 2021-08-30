@@ -34,7 +34,7 @@ app.get("/products",async (req,res) => {
     try {
         const products = await Product.find({})
         if (!products) {
-            return res.status(404).send("There is no user to show")
+            return res.status(404).send("There is no products to show")
         }
         res.status(200).send(products)
     } catch (error) {
