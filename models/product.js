@@ -32,7 +32,7 @@ productSchema.statics.preventDublicate = async function(obj) {
         await product.save()
         return product;
     }else{
-        throw new Error("This email has been used already");
+        throw new Error();
     }
 
 }

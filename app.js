@@ -26,7 +26,19 @@ app.post("/product",async (req,res) => {
         const product = await Product.preventDublicate(req.body);
         res.status(201).send({product})
     } catch (error) {
-        res.status(400).send(error)
+        res.status(400).send({error : "This name has been used already"})
+    }
+})
+
+app.get("/products",async (req,res) => {
+    try {
+        const products = await Product.find({})
+        if (!products) {
+            return res.status(404).send("There is no user to show")
+        }
+        res.status(200).send(products)
+    } catch (error) {
+        res.status(404).send("Unable to fetch products")
     }
 })
 
