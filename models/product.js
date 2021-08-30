@@ -13,7 +13,8 @@ const productSchema = new mongoose.Schema({
         unique : true
     },
     image : {
-        type : Buffer        
+        type : Buffer,
+        default : null    
     },
     price : {
         type : Number,

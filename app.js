@@ -9,6 +9,7 @@ const app = express()
 const port = 8080;
 const publicDirectory = path.join(__dirname,"./public")
 app.use(express.static(publicDirectory))
+app.use(express.json())
 app.set("view engine","hbs")
 app.set("views",publicDirectory)
 
