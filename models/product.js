@@ -37,6 +37,21 @@ productSchema.statics.preventDublicate = async function(obj) {
 
 }
 
+
+productSchema.methods.toJSON = function() {
+    const product = this
+    const productObj = product.toObject()
+    delete productObj.image
+    if (product.image === null) {
+        productObj["image_link"] = "-"
+    }else{
+        const imageUrl = "http://localhost:8080/products/" + product._id + "/image"
+        productObj["image_link"] = imageUrl
+        // String.prototype.link(imageUrl)
+    }
+    return productObj
+}
+
 const Product = mongoose.model("Product",productSchema)
 
 module.exports = Product;
