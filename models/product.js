@@ -28,6 +28,11 @@ productSchema.statics.preventDublicate = async function(obj) {
     const query = await Product.findOne({name : obj.name})
 
     if (!query) {
+        if (typeof obj.price === "string"){
+            obj.price_product = Number.parseFloat(obj.price_product)
+        }
+        // console.log("preventDub")
+        // console.log(obj)
         const product = new Product(obj)
         await product.save()
         return product;

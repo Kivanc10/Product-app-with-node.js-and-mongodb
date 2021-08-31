@@ -3,14 +3,18 @@ const multer = require("multer");
 const path = require("path")
 require("./db/mongodb"); // to connect to db
 const Product = require("./models/product")
+var bodyParser = require('body-parser');
 
 
 const app = express()
 //console.log(path.join(__dirname,"./public"))
 const port = 8080;
 const publicDirectory = path.join(__dirname, "./public")
-app.use(express.static(publicDirectory))
+
 app.use(express.json()) // to accept json
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
+app.use(express.static(publicDirectory))
 app.set("view engine", "hbs")
 app.set("views", publicDirectory)
 
@@ -28,7 +32,7 @@ const upload = multer({
         fileSize: 2000000
     },
     fileFilter(req, file, cb) {
-        if (!file.originalname.endsWith(".jpg") || file.originalname.endsWith(".jpeg") || file.originalname.endsWith(".png")) {
+        if (!(file.originalname.endsWith(".jpg") || file.originalname.endsWith(".jpeg") || file.originalname.endsWith(".png"))) {
             cb(new Error("The extension of file must be .jpg or .jpeg or .png"))
         }
         cb(undefined, true)
@@ -37,7 +41,8 @@ const upload = multer({
 
 app.post("/product", async (req, res) => {
     try {
-        const product = await Product.preventDublicate(req.body);
+        console.log(req.body)
+        const product = await Product.preventDublicate(req.body)               
         res.status(201).send({ product })
     } catch (error) {
         res.status(400).send({ error: "This name has been used already" })
@@ -58,6 +63,16 @@ app.post("/product/avatar/:id", upload.single("image"), async (req, res) => {
     res.status(404).send({ error: err.message })
 })
 
+app.post("/uploadProductAvatar", upload.single("image"), async (req, res, next) => {
+    const file = req.file
+    if (!file) {
+        const error = new Error("please upload an avatar image for the product")
+        error.httpStatusCode = 400
+        return next(error)
+    }
+    res.status(200).send(file)
+})
+
 app.get("/products", async (req, res) => {
     try {
         const products = await Product.find({})
@@ -72,13 +87,13 @@ app.get("/products", async (req, res) => {
 
 app.get("/product/:id", async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id)       
-        if (!product) {            
+        const product = await Product.findById(req.params.id)
+        if (!product) {
             return res.status(404).send({ error: "There is no product that has that id" })
         }
         res.status(200).send(product)
-    } catch (error) {       
-        res.status(404).send({error : "There is no product that has that id"})
+    } catch (error) {
+        res.status(404).send({ error: "There is no product that has that id" })
     }
 })
 
