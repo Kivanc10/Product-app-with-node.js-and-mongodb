@@ -70,17 +70,29 @@ app.get("/products", async (req, res) => {
     }
 })
 
+app.get("/product/:id", async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id)       
+        if (!product) {            
+            return res.status(404).send({ error: "There is no product that has that id" })
+        }
+        res.status(200).send(product)
+    } catch (error) {       
+        res.status(404).send({error : "There is no product that has that id"})
+    }
+})
 
-app.get("/products/:id/image",async (req,res) => {
+
+app.get("/products/:id/image", async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
         if (!product || !product.image) {
             throw new Error("There is no product or product image");
         }
-        res.set("Content-Type","image/jpg") // to set content type as image
+        res.set("Content-Type", "image/jpg") // to set content type as image
         res.send(product.image)
     } catch (error) {
-        
+
     }
 })
 
