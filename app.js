@@ -78,7 +78,7 @@ app.post("/product/avatar/:id", upload.single("image"), async (req, res) => {
         product.image = req.file.buffer
         await product.save()
         //res.send(req.file);
-       res.redirect(`/product/${{id}}`)
+       res.redirect(`/product/${_id}`)
     } catch (error) {
         res.status(404).send({error : "your product id is unvalid or an error occured during the fetch product id"})
     }
