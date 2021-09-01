@@ -30,6 +30,7 @@ app.get("/", (req, res) => {
 })
 
 const upload = multer({
+    //dest: "avatars", // we dont need anymore becasue we save avatar in server
     limits: {
         fileSize: 2000000
     },
@@ -77,7 +78,7 @@ app.post("/product/avatar/:id", upload.single("image"), async (req, res) => {
         product.image = req.file.buffer
         await product.save()
         //res.send(req.file);
-       res.redirect(`/product/${_id}`)
+       res.redirect(`/product/${{id}}`)
     } catch (error) {
         res.status(404).send({error : "your product id is unvalid or an error occured during the fetch product id"})
     }
