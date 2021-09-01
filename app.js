@@ -4,7 +4,7 @@ const path = require("path")
 require("./db/mongodb"); // to connect to db
 const Product = require("./models/product")
 var bodyParser = require('body-parser');
-
+const mongoose = require("mongoose")
 
 const app = express()
 //console.log(path.join(__dirname,"./public"))
@@ -19,8 +19,8 @@ app.set("view engine", "hbs")
 app.set("views", publicDirectory)
 
 
-const sleep = function(ms) {
-    return new Promise(resolve => setTimeout(resolve,ms))
+const sleep = function (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 app.get("/", (req, res) => {
@@ -30,7 +30,6 @@ app.get("/", (req, res) => {
 })
 
 const upload = multer({
-    //dest: "avatars", // we dont need anymore becasue we save avatar in server
     limits: {
         fileSize: 2000000
     },
@@ -42,32 +41,56 @@ const upload = multer({
     }
 })
 
-app.post("/product", async (req, res) => {
+let productGlbl;
+
+app.post("/product", async (req, res, next) => {
     try {
         console.log(req.body)
-        const product = await Product.preventDublicate(req.body)               
-        res.status(201).send({ product });
-        //res.write()
-        await sleep(1800)
+        productGlbl = await Product.preventDublicate(req.body)
+
+//        await sleep(1200)
         //res.sendFile(path.join(__dirname,"/public/uploadAvatar.html"))
+        next()
     } catch (error) {
         res.status(400).send({ error: "This name has been used already" })
     }
+}, function (req, res) {
+    const _id = mongoose.Types.ObjectId(productGlbl._id)
+    console.log(_id)
+    res.render("uploadAvatar", {
+        id: _id
+    })
 })
+
+
+
 
 app.post("/product/avatar/:id", upload.single("image"), async (req, res) => {
-    const _id = req.params.id
-    const product = await Product.findById(_id)
-    if (!product) {
-        throw new Error("there is no product to choose avatar")
+    try {
+        const _id = req.params.id
+        const product = await Product.findById(_id)
+        console.log("product type --> " + typeof product)
+        if (!product) {
+            //("there is no product to choose avatar")
+            return res.status(404).send("there is no product to choose avatar")
+        }
+        product.image = req.file.buffer
+        await product.save()
+        //res.send(req.file);
+       res.redirect(`/product/${_id}`)
+    } catch (error) {
+        res.status(404).send({error : "your product id is unvalid or an error occured during the fetch product id"})
     }
-    product.image = req.file.buffer
-    await product.save()
-    res.send(req.file);
 
-}, (req, res, next) => {
-    res.status(404).send({ error: err.message })
-})
+
+}
+// , (req, res, next) => {
+//     res.render("route",{
+        
+//     })
+//     //res.status(404).send({ error: error.message })
+// }
+)
 
 app.post("/uploadProductAvatar", upload.single("image"), async (req, res, next) => {
     const file = req.file
