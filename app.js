@@ -19,6 +19,9 @@ app.set("view engine", "hbs")
 app.set("views", publicDirectory)
 
 
+const sleep = function(ms) {
+    return new Promise(resolve => setTimeout(resolve,ms))
+}
 
 app.get("/", (req, res) => {
     res.render("index", {
@@ -43,7 +46,10 @@ app.post("/product", async (req, res) => {
     try {
         console.log(req.body)
         const product = await Product.preventDublicate(req.body)               
-        res.status(201).send({ product })
+        res.status(201).send({ product });
+        //res.write()
+        await sleep(1800)
+        //res.sendFile(path.join(__dirname,"/public/uploadAvatar.html"))
     } catch (error) {
         res.status(400).send({ error: "This name has been used already" })
     }
