@@ -29,7 +29,7 @@ productSchema.statics.preventDublicate = async function(obj) {
 
     if (!query) {
         if (typeof obj.price === "string"){
-            obj.price_product = Number.parseFloat(obj.price_product)
+            obj.price = Number.parseFloat(obj.price)
         }
         // console.log("preventDub")
         // console.log(obj)
