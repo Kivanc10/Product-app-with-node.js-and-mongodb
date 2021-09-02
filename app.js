@@ -49,7 +49,7 @@ app.post("/product", async (req, res, next) => {
         console.log(req.body)
         productGlbl = await Product.preventDublicate(req.body)
 
-//        await sleep(1200)
+        //        await sleep(1200)
         //res.sendFile(path.join(__dirname,"/public/uploadAvatar.html"))
         next()
     } catch (error) {
@@ -78,21 +78,21 @@ app.post("/product/avatar/:id", upload.single("image"), async (req, res) => {
         product.image = req.file.buffer
         await product.save()
         //res.send(req.file);
-//       res.redirect(`/product/${_id}`)
-        
+        //       res.redirect(`/product/${_id}`)
+
         res.redirect(`/product-list`)
     } catch (error) {
-        res.status(404).send({error : "your product id is unvalid or an error occured during the fetch product id"})
+        res.status(404).send({ error: "your product id is unvalid or an error occured during the fetch product id" })
     }
 
 
 }
-// , (req, res, next) => {
-//     res.render("route",{
-        
-//     })
-//     //res.status(404).send({ error: error.message })
-// }
+    // , (req, res, next) => {
+    //     res.render("route",{
+
+    //     })
+    //     //res.status(404).send({ error: error.message })
+    // }
 )
 
 app.post("/uploadProductAvatar", upload.single("image"), async (req, res, next) => {
@@ -112,15 +112,15 @@ app.get("/products", async (req, res) => {
             return res.status(404).send("There is no product to show")
         }
         res.status(200).send(products)
-       
+
     } catch (error) {
         res.status(404).send("Unable to fetch products")
     }
 })
 
 
-app.get("/product-list",async (req,res) => {
-    res.render("products",{
+app.get("/product-list", async (req, res) => {
+    res.render("products", {
 
     })
 })
@@ -148,6 +148,76 @@ app.get("/products/:id/image", async (req, res) => {
         res.send(product.image)
     } catch (error) {
 
+    }
+})
+
+app.get("/product/update/:id", async (req, res) => {
+    let product;
+    try {
+        product = await Product.findById(req.params.id)
+        if (!product) {
+            return res.status(404).send({ error: "There is no product that has that id" })
+        }
+        res.status(200).render("update", {
+            name: product.name,
+            price: product.price,
+            id: product._id
+        })
+
+    } catch (error) {
+        res.status(404).send({ error: "Failed to get and update the product" })
+    }
+
+})
+
+app.get("/product/delete/:id",async (req,res) => {
+    let product;
+    try {
+        product = await Product.findById(req.params.id)
+        if (!product) {
+            return res.status(404).send({ error: "There is no product that has that id" })
+        }
+        res.status(200).render("delete", {
+            name: product.name,
+            price: product.price,
+            id: product._id
+        })
+    } catch (error) {
+        res.status(404).send({ error: "Failed to delete the product" })
+    }
+})
+
+app.patch("/product/update/:id", async (req, res) => {
+    let credentials = ["name", "price"]
+    
+    const provided = Object.keys(req.body)
+
+    const isValid = provided.every((e) => credentials.includes(e));
+    if (!isValid) {
+        return res.status(400).send({error : "Please provide the correct credentials"})
+    } 
+
+    try {
+        const product = await Product.findById(req.params.id)
+       credentials.forEach((c) => {
+            product[c] = req.body[c]
+       })
+       await product.save()
+       res.redirect("/product-list")
+    } catch (error) {
+        res.status(400).send({error : "Failed to update the product"})
+    }
+})
+
+app.delete("/product/delete/:id",async (req,res) => {
+    try {
+        const product = await Product.findByIdAndDelete(req.params.id)
+        if (!product) {
+            return res.status(404).send({error : "There is no product that has that id"})
+        }
+        res.redirect("/product-list")
+    } catch (error) {
+        res.status(404).send({error : "Failed to delete the product"})
     }
 })
 

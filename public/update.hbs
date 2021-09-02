@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Update the product named {{name}}</h1>
+    <br><br>
+    <form action="/product/update/{{id}}" method="PATCH">
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="input_name">Name</span>
+            <input id="textName" type="text" name="name" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-sm" required />
+        </div>
+
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="input_price">Price</span>
+            <input id="textPrice" type="text" name="price" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-sm" required />
+        </div>
+        <input onclick="updateProduct()" type="submit" value="Update and Go" />
+    </form>
+
+    <script>
+        let inputName = document.getElementById("textName")
+        let inputPrice = document.getElementById("textPrice")
+        inputName.value = `{{name}}`
+        inputPrice.value = `{{price}}`
+
+        {{!-- const updateProduct = () => {
+            var url = `http://localhost:8080/product/update/{{id}}`
+            var xhr = new XMLHttpRequest();
+            xhr.open("PATCH", url);
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    console.log(xhr.status);
+                    console.log(xhr.responseText);
+                }
+            };
+
+            var data = {
+                name : inputName,
+                price : parseInt(inputPrice)
+            }
+
+            xhr.send(data);
+
+        } --}}
+
+    </script>
+</body>
+
+</html>
