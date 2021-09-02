@@ -7,21 +7,25 @@
     <title>Document</title>
 </head>
 <body>
-   <p id="results"></p>
+   <div id="results"></div>
+   <p id="routing"></p>
     <script>
         fetch("http://localhost:8080/products").then((res) => {
             return res.json()
         }).then((response) => {
             var results = document.getElementById("results")
-            response.forEach((e) => {
-               // var temp = JSON.parse(e)
+            if (Object.entries(response).length === 0) {
+                results.innerHTML = `<h2> ****** There is no product to show ****** </h2>` + "<hr>" + "<br>"
+            }else{
+                response.reverse().forEach((e) => {               
                 results.innerHTML += `<h3>${e.name}</h3>` + "<br>"
-               results.innerHTML += `<a href = "/product/${e._id}"><img src ="${e.image_link}" width = 250 height = 250</a>` + "<br>"
+               results.innerHTML += `<a href = "/product/${e._id}"><img src ="${e.image_link}" width = 350 height = 300</a>` + "<br>"
                results.innerHTML += `<p style = "font-size : 25px"> Price : $ ${e.price} </p>` + "<hr>"
             })
+            }
             
-            var myObj = JSON.parse(response[0])
-            results.innerHTML = myObj[0].name
+           var routing = document.getElementById("routing")
+           routing.innerHTML = `<a style = "text-decoration-line : None;font-size : 25px" href = "/"><b><p>Get back to main page</p></b></a>`
         })
     </script>
 </body>

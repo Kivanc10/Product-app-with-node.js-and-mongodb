@@ -78,7 +78,9 @@ app.post("/product/avatar/:id", upload.single("image"), async (req, res) => {
         product.image = req.file.buffer
         await product.save()
         //res.send(req.file);
-       res.redirect(`/product/${_id}`)
+//       res.redirect(`/product/${_id}`)
+        
+        res.redirect(`/product-list`)
     } catch (error) {
         res.status(404).send({error : "your product id is unvalid or an error occured during the fetch product id"})
     }
@@ -110,6 +112,7 @@ app.get("/products", async (req, res) => {
             return res.status(404).send("There is no product to show")
         }
         res.status(200).send(products)
+       
     } catch (error) {
         res.status(404).send("Unable to fetch products")
     }
@@ -118,7 +121,7 @@ app.get("/products", async (req, res) => {
 
 app.get("/product-list",async (req,res) => {
     res.render("products",{
-        
+
     })
 })
 
