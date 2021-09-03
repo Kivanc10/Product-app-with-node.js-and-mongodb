@@ -63,6 +63,20 @@ app.post("/product", async (req, res, next) => {
     })
 })
 
+app.get("/product/update/avatar/:id",async (req,res) => {
+    try {
+        const product = await Product.findById(req.params.id)
+        if (!product) {
+            return res.status(404).send({error : "There is no product to update"})
+        }
+        const _id = mongoose.Types.ObjectId(product._id)
+        res.render("uploadAvatar",{
+            id : _id
+        })
+    } catch (error) {
+        res.status(404).send({error : "Failed to update the product avatar"})
+    }
+})
 
 
 
@@ -203,7 +217,8 @@ app.patch("/product/update/:id", async (req, res) => {
             product[c] = req.body[c]
        })
        await product.save()
-       res.redirect("/product-list")
+       //res.redirect("/product-list")
+       res.status(200).send(product)
     } catch (error) {
         res.status(400).send({error : "Failed to update the product"})
     }

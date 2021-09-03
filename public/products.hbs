@@ -31,7 +31,7 @@
                 results.innerHTML += `<h3>${e.name}</h3>` + "<br>"
                results.innerHTML += `<a href = "/product/${e._id}"><img src ="${e.image_link}" width = 350 height = 300</a>` + "<br>"
                results.innerHTML += `<p style = "font-size : 25px"> Price : $ ${e.price} </p>` 
-               {{!-- results.innerHTML += `<a style="text-decoration-line:None;font-size:20px" href="/product/update/${e._id}">Update the product</a>` + "<br><br>" --}}
+               results.innerHTML += `<a style="text-decoration-line:None;font-size:20px" href="/product/update/${e._id}">Update the product</a>` + "<br><br>"
                results.innerHTML += `<a style="text-decoration-line:None;font-size:20px" href="/product/delete/${e._id}">Delete the product</a>` + "<hr>"
             })
             }

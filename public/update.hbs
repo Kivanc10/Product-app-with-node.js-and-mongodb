@@ -25,36 +25,41 @@
             <input id="textPrice" type="text" name="price" class="form-control" aria-label="Sizing example input"
                 aria-describedby="inputGroup-sizing-sm" required />
         </div>
-        <input onclick="updateProduct()" type="submit" value="Update and Go" />
+        <input id="updateBtn" type="submit" value="Update and Go" />
     </form>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        let inputName = document.getElementById("textName")
-        let inputPrice = document.getElementById("textPrice")
-        inputName.value = `{{name}}`
-        inputPrice.value = `{{price}}`
+        $("#textName").val("{{name}}")
+        $("#textPrice").val("{{price}}")
 
-        {{!-- const updateProduct = () => {
-            var url = `http://localhost:8080/product/update/{{id}}`
-            var xhr = new XMLHttpRequest();
-            xhr.open("PATCH", url);
-            xhr.setRequestHeader("Accept", "application/json");
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    console.log(xhr.status);
-                    console.log(xhr.responseText);
-                }
-            };
 
-            var data = {
-                name : inputName,
-                price : parseInt(inputPrice)
-            }
-
-            xhr.send(data);
-
+        {{!-- var patchData = {
+            name: name,
+            price: price
         } --}}
+
+        $("#updateBtn").click(function (e) {
+            var name = $("#textName").val()
+            var price = $("#textPrice").val()
+             var patchData = {
+                name: name,
+                price: price
+             }
+           // alert(Object.values(patchData))
+            e.preventDefault();
+            $.ajax({
+                url: "/product/update/{{id}}",
+                type: "PATCH",
+                data: patchData,
+                success: function () {
+                    alert("The product name and price have been updated")
+                    window.location.href = "/product/update/avatar/{{id}}"
+                },
+                error: function () {
+                    alert("An error occured during update the product features")
+                }
+            })
+        })
 
     </script>
 </body>
