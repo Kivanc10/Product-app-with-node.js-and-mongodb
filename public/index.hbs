@@ -8,13 +8,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            padding: 15px;
+        }
+
+        #resultDiv a {
+            display: inline-block;
+            margin-right: 25px;
+            margin-top: 15px;
+            padding: 15px;
+        }
+
+        #addProductTitle {
+            color: red;
+        }
+       
+    </style>
 </head>
 
 <body>
     <h1>This is main page</h1>    
 <hr>
     <br>
-    <h3>Add product</h3>
+    <h3 id="addProductTitle" >Add product</h3>
     <form action="/product" method="POST">
             <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="input_name">Name</span>
@@ -33,10 +50,15 @@
     <hr>
     <br>
     
-    <a href="/product-list"><button>Show All products</button></a>
-    <br>
+   <div id ="resultDiv">
+        <a href="/product-list"><button>Show All products</button></a>
+    {{!-- <br>
+    <hr> --}}
+     <a href="/products"><button>Show All Products as database result</button></a>
+   </div>
+   
+     <br>
     <hr>
-
     <p><b>This page is created by Kıvanç Aydoğmuş</b></p>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
