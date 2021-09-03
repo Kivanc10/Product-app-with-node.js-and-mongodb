@@ -215,7 +215,8 @@ app.delete("/product/delete/:id",async (req,res) => {
         if (!product) {
             return res.status(404).send({error : "There is no product that has that id"})
         }
-        res.redirect("/product-list")
+        //res.redirect("/product-list")
+        res.status(200).send(product)
     } catch (error) {
         res.status(404).send({error : "Failed to delete the product"})
     }
