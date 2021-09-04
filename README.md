@@ -9,5 +9,6 @@ TODO
     - Then configure the docker-compose.yml to make everything systematically and auto-control by linux kernel.
 
     - Look at the article on medium that related to docker-node.js and my node-mongo-docker app when configuring the app as image and container.
+        - `https://medium.com/zenofai/how-to-build-a-node-js-and-mongodb-application-with-docker-containers-15e535baabf5`
 
     - Put the docker container on digital ocean
