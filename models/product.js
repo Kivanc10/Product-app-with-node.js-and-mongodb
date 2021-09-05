@@ -50,7 +50,7 @@ productSchema.methods.toJSON = function() {
     if (product.image === null) {
         productObj["image_link"] = "-"
     }else{
-        const imageUrl = "http://localhost:8080/products/" + product._id + "/image"
+        const imageUrl = "/products/" + product._id + "/image"
         productObj["image_link"] = imageUrl
         // String.prototype.link(imageUrl)
     }
